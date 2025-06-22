@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hexapod URDF Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #1e1e1e; /* Dark background for the entire page */
+      color: #f1f1f1; /* Light text color */
+      display: flex;
+      height: 100vh;
+      overflow: hidden; /* Prevent scrollbars */
+    }
+
+    #canvas-container {
+      flex: 1; /* Takes up remaining space for the 3D viewer */
+      position: relative;
+    }
+
+    #canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #control-panel {
+      flex-basis: 380px; /* Increased width for the control panel to fit video */
+      background: #2c2c2c; /* Slightly lighter dark background for panel */
+      overflow-y: auto; /* Scrollable if content overflows */
+      padding: 20px;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3); /* Shadow for separation */
+      display: flex; /* Use flexbox for stacking content vertically */
+      flex-direction: column;
+    }
+
+    #control-panel h2 {
+        margin-top: 0;
+        margin-bottom: 25px; /* Added spacing */
+        color: #f1f1f1; /* Ensure heading is visible */
+        text-align: center;
+    }
+
+    /* --- MediaPipe Video and Canvas Container --- */
+    #video-mediapipe-container {
+        position: relative;
+        width: 100%;
+        /* Maintain aspect ratio for video/canvas (e.g., 4:3 aspect ratio) */
+        padding-bottom: 75%; /* (height / width) * 100% -> (480 / 640) * 100% */
+        background-color: #000;
+        overflow: hidden;
+        border-radius: 8px; /* Rounded corners */
+        margin-bottom: 20px; /* Space below video feed */
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    #webcamVideo, #mediapipeCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Scale the video/canvas to fit the container */
+      transform: scaleX(-1); /* Flip horizontally for mirror effect */
+    }
+
+    /* --- Sliders Container --- */
+    #sliders-container {
+        flex-grow: 1; /* Sliders take up remaining vertical space in control panel */
+        overflow-y: auto; /* Ensure sliders are scrollable if many */
+    }
+
+    .joint-slider {
+      margin-bottom: 20px;
+    }
+
+    .joint-slider label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .joint-slider input[type="range"] {
+      width: 100%;
+      height: 8px; /* Slightly thicker slider */
+      background: #555; /* Darker track */
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 4px;
+      transition: opacity .2s;
+    }
+
+    .joint-slider input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #007bff; /* Blue thumb */
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    .joint-slider input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #007bff;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+
+    .joint-slider span {
+      float: right;
+      font-weight: normal;
+      font-size: 13px;
+      color: #b0b0b0; /* Slightly greyed out for value */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      #canvas-container {
+        height: 60vh; /* Takes 60% of viewport height */
+        flex: none;
+      }
+      #control-panel {
+        width: 100%;
+        height: 40vh; /* Takes 40% of viewport height */
+        flex-basis: auto; /* Allow content to dictate height, but capped by vh */
+      }
+      #video-mediapipe-container {
+        height: 50%; /* Make video container take 50% of panel height */
+        padding-bottom: 0; /* Remove padding-bottom trick as height is fixed */
+      }
+      #sliders-container {
+        height: 50%; /* Make sliders container take 50% of panel height */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div id="control-panel">
+    <h2>Joint Controls</h2>
+    <!-- MediaPipe Video and Canvas will go here -->
+    <div id="video-mediapipe-container">
+        <video id="webcamVideo" autoplay playsinline></video>
+        <canvas id="mediapipeCanvas"></canvas>
+    </div>
+    <div id="sliders-container"></div>
+  </div>
+
+  <!-- MediaPipe Hands Libraries from CDN (Replaced Pose libraries) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
