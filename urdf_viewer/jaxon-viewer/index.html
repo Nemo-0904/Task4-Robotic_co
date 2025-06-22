@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAXON Humanoid Viewer</title>
+  <style>
+    /* Basic styling for layout */
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden; /* Prevent scrollbars */
+      font-family: sans-serif;
+      background-color: #333; /* A neutral background for the whole page */
+      color: white; /* Default text color for the panel */
+    }
+
+    #layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+    #canvas-container {
+      flex-grow: 1; /* Canvas takes up available space */
+      height: 100%;
+ 
+    }
+
+    canvas {
+      width: 100%; /* Make canvas responsive within its container */
+      height: 100%;
+      display: block; /* Remove extra space below canvas */
+    }
+
+    #sliders-container {
+      width: 40%; /* Sliders panel takes 40% width */
+      max-width: 400px; /* Max width to keep it from getting too wide on large screens */
+      height: 100%;
+      background-color: #222; /* Dark background for panel */
+      color: white;
+      overflow-y: auto; /* Scrollable if content overflows */
+      padding: 15px; /* Added some padding */
+      font-size: 14px;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5); /* Shadow for separation */
+    }
+
+    .joint-slider {
+      margin-bottom: 10px;
+      padding: 8px; /* Added padding to individual sliders */
+      background-color: #333; /* Slightly lighter background for each slider */
+      border-radius: 5px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-weight: bold; /* Make labels stand out */
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px; /* Adjust slider height */
+      background: #555; /* Slider track color */
+      outline: none;
+      opacity: 0.7;
+      transition: opacity .2s;
+      border-radius: 3px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px; /* Slider thumb size */
+      height: 18px;
+      border-radius: 50%;
+      background: #007bff; /* Blue thumb */
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(13, 1, 1, 0.3);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #007bff;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #layout {
+        flex-direction: column;
+      }
+
+      #canvas-container {
+        width: 100%;
+        height: 60vh; /* Takes 60% of viewport height on small screens */
+      }
+
+      #sliders-container {
+        width: 100%;
+        height: 40vh; /* Takes 40% of viewport height on small screens */
+        max-width: 100%; /* No max width on small screens */
+      }
+    }
+  </style>
+
+  <!-- Import Map for module loading -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "/node_modules/three/build/three.module.js",
+        "urdf-loader": "/node_modules/urdf-loader/dist/urdf-loader.module.js"
+        /* Note: three/examples/jsm imports (OrbitControls, ColladaLoader) usually work
+           automatically if your dev server (Vite) is configured to handle them,
+           or if they are bundled. No direct importmap entry typically needed for them. */
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="layout">
+    <div id="canvas-container">
+      <canvas id="canvas"></canvas>
+
+    </div>
+    <div id="sliders-container">
+      <h2 style="font-size: 1.5em; text-align: center; margin-bottom: 20px; color: #007bff;">JAXON Joint Controls</h2>
+      <!-- Sliders will be dynamically added here by main.js -->
+    </div>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
